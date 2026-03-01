@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人介绍</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8f9fc;
+      --surface: #ffffff;
+      --text: #1a1d26;
+      --text-muted: #5c6178;
+      --accent: #2d5a87;
+      --accent-light: #e8eef5;
+      --border: #e2e6ed;
+      --shadow: 0 4px 20px rgba(0,0,0,0.06);
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #14161c;
+      --surface: #1c1f28;
+      --text: #e8eaef;
+      --text-muted: #9ca3b8;
+      --accent: #6ba3d8;
+      --accent-light: #2a3548;
+      --border: #2d3340;
+      --shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* ========== 头部 ========== */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .avatar-wrap {
+      flex-shrink: 0;
+    }
+
+    .avatar {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--accent-light);
+      box-shadow: var(--shadow);
+    }
+
+    .header-info {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .name {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+    .title {
+      font-size: 1rem;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .meta {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .meta span + span::before {
+      content: " · ";
+      opacity: 0.7;
+    }
+
+    /* ========== 区块通用 ========== */
+    .section {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--accent-light);
+    }
+
+    .bio {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    /* ========== 履历 ========== */
+    .timeline-item {
+      padding-bottom: 1.5rem;
+      border-left: 2px solid var(--accent-light);
+      margin-left: 0.5rem;
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -6px;
+      top: 0.35rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .timeline-role {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    .timeline-company {
+      font-size: 0.9rem;
+      color: var(--accent);
+      margin-top: 0.15rem;
+    }
+
+    .timeline-date {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      line-height: 1.6;
+    }
+
+    /* ========== 兴趣爱好 ========== */
+    .interests-intro {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      line-height: 1.7;
+    }
+
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+
+    .interest-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--accent-light);
+      border-radius: var(--radius);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .interest-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .interest-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .interest-name {
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    /* ========== 联系方式 ========== */
+    .contact-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .contact-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      background: var(--accent-light);
+      border-radius: var(--radius);
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .contact-item:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .contact-item svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    /* ========== 顶部栏与主题切换 ========== */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 1.5rem;
+      z-index: 100;
+      box-shadow: 0 1px 0 var(--border);
+    }
+
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: background 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-light);
+    }
+
+    .download-btn {
+      margin-left: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: opacity 0.2s ease;
+    }
+
+    .download-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* ========== 回到顶部 ========== */
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.2s ease;
+      z-index: 99;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      transform: scale(1.05);
+    }
+
+    /* ========== 响应式 ========== */
+    @media (max-width: 640px) {
+      .container {
+        padding: 1rem 1rem 3rem;
+      }
+
+      .header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .avatar {
+        width: 120px;
+        height: 120px;
+      }
+
+      .section {
+        padding: 1.25rem 1.25rem;
+      }
+
+      .interests-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .back-to-top {
+        right: 1rem;
+        bottom: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <button class="theme-toggle" id="themeToggle" aria-label="切换主题">🌓</button>
+    <a href="#contact" class="download-btn">下载简历</a>
+  </header>
+  <main class="container">
+    <div style="height: 72px;"></div>
+
+    <!-- 头部：头像与基本信息 -->
+    <header class="header">
+      <div class="avatar-wrap">
+        <img class="avatar" src="./images/e1abae49f8e1b38e4e13d7f1caed3b61.jpg" alt="个人头像">
+      </div>
+      <div class="header-info">
+        <h1 class="name">叶雅欣</h1>
+        <p class="title">AI产品经理</p>
+        <p class="meta">
+          <span>2001年</span>
+        </p>
+      </div>
+    </header>
+
+    <!-- 教育背景 -->
+    <section class="section" data-section>
+      <h2 class="section-title">教育背景</h2>
+      <div class="timeline-item">
+        <div class="timeline-role">国际商务 · 硕士</div>
+        <div class="timeline-company">对外经济贸易大学</div>
+        <div class="timeline-date">2024 – 2026</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-role">国际经济与贸易 · 本科</div>
+        <div class="timeline-company">四川大学</div>
+        <div class="timeline-date">2020 – 2024</div>
+      </div>
+    </section>
+
+    <!-- 个人简介 -->
+    <section class="section" data-section>
+      <h2 class="section-title">个人简介</h2>
+      <p class="bio">
+        1. AI PM经验1年+：5段AIPM实习，覆盖对话产品/创意生成（生图/视频）产品，agent/chatbot，B端/C端、LLM/多模态（语音/视觉）。<br><br>
+        2. AI技术栈：（1）擅长prompt撰写、workflow搭建；（2）有知识库构建、切分、重排实战经验；（3）熟悉sft、rag、蒸馏、agent等原理。<br><br>
+        3. 0-1独立开发agent10+（含代码，开VPN可查看）：（1）https://ibb.co/sJvHvcWc （2）https://ibb.co/qL0XyNRW。<br><br>
+        4. 商创赛获奖率85%：商赛、创赛获奖18项（国级1项，省级5项，校级12项），获奖率达85%，商业sense强，多线程任务管理能力强。
+      </p>
+    </section>
+
+    <!-- 实习经历 -->
+    <section class="section" data-section>
+      <h2 class="section-title">实习经历</h2>
+      <div class="timeline-item">
+        <div class="timeline-role">AI产品经理</div>
+        <div class="timeline-company">智谱华章</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-role">AI产品经理</div>
+        <div class="timeline-company">百度</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-role">AI产品经理</div>
+        <div class="timeline-company">教培独角兽</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-role">AI产品经理</div>
+        <div class="timeline-company">法律垂域大模型公司</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-role">AI产品经理</div>
+        <div class="timeline-company">Startup</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-role">AI产品运营</div>
+        <div class="timeline-company">小红书</div>
+      </div>
+    </section>
+
+    <!-- 兴趣爱好 -->
+    <section class="section" data-section>
+      <h2 class="section-title">兴趣爱好</h2>
+      <p class="interests-intro">
+        长跑（连续八年校运会长跑前三，意志力强大）、羽毛球（院队成员，身体素质好）、架子鼓（乐队队长）；<br>
+        攀岩、健身、徒步、滑板。
+      </p>
+      <div class="interests-grid">
+        <div class="interest-card">
+          <div class="interest-icon">🏃</div>
+          <span class="interest-name">长跑</span>
+        </div>
+        <div class="interest-card">
+          <div class="interest-icon">🏸</div>
+          <span class="interest-name">羽毛球</span>
+        </div>
+        <div class="interest-card">
+          <div class="interest-icon">🥁</div>
+          <span class="interest-name">架子鼓</span>
+        </div>
+        <div class="interest-card">
+          <div class="interest-icon">🧗</div>
+          <span class="interest-name">攀岩</span>
+        </div>
+        <div class="interest-card">
+          <div class="interest-icon">💪</div>
+          <span class="interest-name">健身</span>
+        </div>
+        <div class="interest-card">
+          <div class="interest-icon">🥾</div>
+          <span class="interest-name">徒步</span>
+        </div>
+        <div class="interest-card">
+          <div class="interest-icon">🛹</div>
+          <span class="interest-name">滑板</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <section class="section" id="contact" data-section>
+      <h2 class="section-title">联系方式</h2>
+      <div class="contact-list">
+        <a class="contact-item" href="mailto:yeyaxinuibe@gmail.com">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          yeyaxinuibe@gmail.com
+        </a>
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-5l-3 3-3-3H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+          微信：wyxfkl1
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <button class="back-to-top" id="backToTop" aria-label="回到顶部">↑</button>
+
+  <script>
+    // 主题切换
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    if (localStorage.getItem('theme') === 'dark') {
+      html.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️';
+    } else {
+      html.removeAttribute('data-theme');
+      themeToggle.textContent = '🌓';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      if (html.getAttribute('data-theme') === 'dark') {
+        html.removeAttribute('data-theme');
+        themeToggle.textContent = '🌓';
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+    // 滚动淡入
+    const sections = document.querySelectorAll('[data-section]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { rootMargin: '0px 0px -60px 0px', threshold: 0.1 });
+
+    sections.forEach((section) => observer.observe(section));
+
+    // 回到顶部
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
